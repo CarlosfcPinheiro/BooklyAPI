@@ -1,12 +1,16 @@
 import { Sequelize } from "sequelize";
+import "dotenv/config";
 import pg from "pg";
+import getAuthorModel from "./entities/author.js";
+import getBookModel from "./entities/book.js";
+import getGenderModel from "./entities/gender.js";
 
+// defindo o objeto sequelize
 const sequelize = new Sequelize(process.env.POSTGRES_URL, {
   dialect: "postgres",
   protocol: "postgres",
-  // logging: false, // Disable SQL query logging
+
   dialectOptions: {
-    // Necessary for SSL on NeonDB, Render.com and other providers
     ssl: {
       require: true,
       rejectUnauthorized: false,
@@ -15,4 +19,21 @@ const sequelize = new Sequelize(process.env.POSTGRES_URL, {
   dialectModule: pg,
 });
 
-export {sequelize}
+// chamando os models das entidades
+const models = {
+  author: getAuthorModel(sequelize, Sequelize),
+  book: getBookModel(sequelize, Sequelize),
+  gender: getGenderModel(sequelize, Sequelize)
+  //user : getUserModel (sequelize, Sequelize),
+  // avaliation: getAvaliation (sequelize, Sequelize),
+};
+
+// definir as associações
+Object.keys(models).forEach((key) => {
+  if ("associate" in models[key]) {
+    models[key].associate(models);
+  }
+});
+
+export {sequelize};
+export default models;
