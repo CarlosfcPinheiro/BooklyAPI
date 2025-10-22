@@ -4,6 +4,8 @@ import pg from "pg";
 import getAuthorModel from "./entities/author.js";
 import getBookModel from "./entities/book.js";
 import getGenderModel from "./entities/gender.js";
+import getUserModel from "./entities/user.js";
+import getReviewModel from "./entities/review.js";
 
 // defindo o objeto sequelize
 const sequelize = new Sequelize(process.env.POSTGRES_URL, {
@@ -23,9 +25,9 @@ const sequelize = new Sequelize(process.env.POSTGRES_URL, {
 const models = {
   author: getAuthorModel(sequelize, Sequelize),
   book: getBookModel(sequelize, Sequelize),
-  gender: getGenderModel(sequelize, Sequelize)
-  //user : getUserModel (sequelize, Sequelize),
-  // avaliation: getAvaliation (sequelize, Sequelize),
+  gender: getGenderModel(sequelize, Sequelize),
+  user: getUserModel (sequelize, Sequelize),
+  review: getReviewModel (sequelize, Sequelize),
 };
 
 // definir as associações
