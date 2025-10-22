@@ -35,6 +35,7 @@ const getReviewModel = (sequelize, {DataTypes}) => {
     
     review.associate = (models) => {
         review.belongsTo(models.user);
+        review.belongsTo(models.book);
     }
 
     return review;

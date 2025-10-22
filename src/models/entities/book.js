@@ -33,6 +33,8 @@ const getBookModel = (sequelize, {DataTypes}) => {
     book.associate = (models) =>{
         book.belongsTo(models.author);
         book.belongsTo(models.gender);
+
+        book.hasMany(models.review, {onDelete: "CASCADE"});
     };
 
     return book;
