@@ -38,6 +38,37 @@ const getReviewModel = (sequelize, {DataTypes}) => {
         review.belongsTo(models.book);
     }
 
+    review.findAllByUserId = async(userId) => {
+        return await review.findAll({
+            where: { 
+                UserId: userId
+             }
+        });
+    }
+
+    review.findAllByBookId = async(bookId) => {
+        return await review.findAll({
+            where: { 
+                BookId: bookId
+             }
+        });
+    }
+
+    review.getAvgRateByBookId = async(bookId) => {
+        const result = await review.findAll({
+            where: { 
+                BookId: bookId
+             },
+            attributes: [
+                [sequelize.fn('AVG', sequelize.col('rate')), 'avgRate']
+            ],
+            raw: true,
+        });
+
+        return result[0].avgRate;
+    }
+    
+
     return review;
 }
 
