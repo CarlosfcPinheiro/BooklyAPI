@@ -24,8 +24,6 @@ const models = {
   author: getAuthorModel(sequelize, Sequelize),
   book: getBookModel(sequelize, Sequelize),
   gender: getGenderModel(sequelize, Sequelize)
-  //user : getUserModel (sequelize, Sequelize),
-  // avaliation: getAvaliation (sequelize, Sequelize),
 };
 
 // definir as associações
