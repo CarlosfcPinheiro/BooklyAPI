@@ -80,9 +80,10 @@ const deleteUserById = async (req, res) => {
             return res.status(404).json({message: "Usuário não encontrado"});
         }
 
-            await user.destroy();
+        await user.destroy();
+        
+        res.status(200).json({message: "Usuário deletado com sucesso"});
 
-            res.status(200).json({message: "Usuário deletado com sucesso"});
     } catch(error){
         res.status(500).json({message: "Erro ao deletar usuário", error: error.message});
     }
