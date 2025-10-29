@@ -2,7 +2,7 @@ import express from "express";
 //import routes from "./routes/index.js";
 import "dotenv/config";
 import cors from "cors";
-import {sequelize} from "./models/index.js";
+import models, {sequelize} from "./models/index.js";
 import router from "./routes/index.js";
 
 import users from "./utils/defaultUsers.js";
@@ -29,7 +29,7 @@ const eraseDatabseOnSync = process.env.ERASE_DATABASE === 'true';
 // inicia a API caso a conexão com o banco de dados for sucedida.
 sequelize.sync({ force: eraseDatabseOnSync }).then(async() => {
     if (eraseDatabseOnSync){
-        createDefaultUsers();
+        await populateDb();
         console.log('Banco de dados reiniciado!');
     }
 
@@ -38,9 +38,12 @@ sequelize.sync({ force: eraseDatabseOnSync }).then(async() => {
     });
 });
 
-const createDefaultUsers = async() => {
+const populateDb = async() => {
     users.forEach( async (userData) => {
-        const user = await sequelize.models.user.create(userData);
+        const user = await models.user.create(userData);
+    });
+    books.forEach( async (bookData) => {
+        const book = await models.book.create(bookData);
     });
 }
 

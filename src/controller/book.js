@@ -3,16 +3,22 @@ import models from "../models/index.js";
 
 const Book = models.book;
 
+//TODO adicionar query param de busca por titulo do livro aplicando regex para busca parcial, ex /books?name=jo retorna todos os livros com "jo" no nome
 const getAllBooks = async (req, res) => {
     try{
         const books = await Book.findAll();
-        if(!books || Book.length == 0){
+        if(!books || books.length == 0){
             return res.status(404).json({message: "Nenhum livro encontrado"});
-        } 
-        res.status(200).json({message:"Livros encontrados com sucesso", data: books});
-
+        }
+        res.status(200).json({
+            message:"Livros encontrados com sucesso", 
+            data: books
+        });
     } catch(error){
-        res.status(500).json({message: "Erro ao buscar livros", error: error.message});
+        res.status(500).json({
+            message: "Erro ao buscar livros", 
+            error: error.message
+        });
     }
 };
 
@@ -23,16 +29,23 @@ const getBookById = async (req, res) => {
         if(!book){
             return res.status(404).json({message: "Livro não foi encontrado."});
         }
-        res.status(200).json({message:"Livro encontrado com sucesso.", data: book});
 
+        res.status(200).json({
+            message:"Livro encontrado com sucesso.", 
+            data: book}
+        );
     } catch(error){
-        res.status(500).json({message: "Erro ao buscar o livro", error: error.message});
+        res.status(500).json({
+            message: "Erro ao buscar o livro", 
+            error: error.message
+        });
     }
 };
 
+//TODO adicionar lógica de criação de autor caso ainda não exista
 const createBook = async (req, res) => {
     try{
-        const {id, title, description, year} = req.body;
+        const {id, title, description, year, imgUrl} = req.body;
         const {authorId, genderId} = req.query;
 
         if (!authorId || !genderId){
@@ -45,12 +58,19 @@ const createBook = async (req, res) => {
             description,
             year,
             authorId,
-            genderId
+            genderId,
+            imgUrl
         });
 
-        res.status(201).json({messa: "Livro criado com sucesso.", data: book});
+        res.status(201).json({
+            message: "Livro criado com sucesso.", 
+            data: book
+        });
     } catch(error){
-        res.status(500).json({message: "Erro ao criar o Livro", error: error.message});
+        res.status(500).json({
+            message: "Erro ao criar o Livro", 
+            error: error.message
+        });
     }
 };
 
@@ -70,29 +90,84 @@ const updateBookById = async (req, res) => {
         
         await book.save();
 
-        res.status(200).json({message: "Livro atualizado com sucesso", data: book});
-
+        res.status(200).json({
+            message: "Livro atualizado com sucesso", 
+            data: book
+        });
     } catch(error){
-        res.status(500).json({message: "Erro ao atualizar o livro", error: error.message});
+        res.status(500).json({
+            message: "Erro ao atualizar o livro", 
+            error: error.message
+        });
     }
 };
 
 const deleteBookById = async (req, res) => {
-    try {const {id} = req.params;
+    try {
+        const {id} = req.params;
+        const book = await Book.findByPk(id);
+        if(!book){
+            return res.status(404).json({message: "Livro não encontrado"});
+        }
 
-    const book = await Book.findByPk(id);
-    if(!book){
-        return res.status(404).json({message: "Livro não encontrado"});
-    }
+        await book.destroy();
 
-    await book.destroy();
-
-    res.status(200).json({message: "Livro deletado com sucesso"});
+        res.status(200).json({message: "Livro deletado com sucesso"});
 
     } catch(error){
-        res.status(500).json({message: "Erro ao deletar o livro", error: error.message});
+        res.status(500).json({
+            message: "Erro ao deletar o livro", 
+            error: error.message
+        });
     }
 };
 
+const getAllBooksByAuthorId = async (req, res) => {
+    try{
+        const {authorId} = req.params;
+        const books = await Book.findAllByAuthorId(authorId);
+        if(!books || books.length === 0){
+            return res.status(404).json({message: "Nenhum livro encontrado para o autor informado."});
+        }
 
-export {getAllBooks, getBookById,createBook, updateBookById, deleteBookById}
+        res.status(200).json({
+            message: "Livros do autor encontrados com sucesso", 
+            data: books
+        });
+    } catch(error){
+        res.status(500).json({
+            message: "Erro ao buscar livros do autor", 
+            error: error.message
+        });
+    }
+}
+
+const getAllBooksByGenderId = async (req, res) => {
+    try{
+        const {genderId} = req.params;
+        const books = await Book.findAllByGenderId(genderId);
+        if(!books || books.length === 0){
+            return res.status(404).json({message: "Nenhum livro encontrado para o gênero informado."});
+        }
+
+        res.status(200).json({
+            message: "Livros do gênero encontrados com sucesso", 
+            data: books
+        });
+    } catch(error){
+        res.status(500).json({
+            message: "Erro ao buscar livros do gênero", 
+            error: error.message
+        });
+    }
+}
+
+export {
+    getAllBooks, 
+    getBookById,
+    createBook, 
+    updateBookById, 
+    deleteBookById, 
+    getAllBooksByAuthorId, 
+    getAllBooksByGenderId
+}

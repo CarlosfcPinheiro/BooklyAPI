@@ -2,6 +2,7 @@ import models from "../models/index.js"
 
 const Author = models.author;
 
+//TODO adicionar query param de busca por nome do autor aplicando regex para busca parcial, ex /author?name=jo retorna todos os autores com "jo" no nome
 const getAllAuthor = async (req, res) => {
     try {
         const authors = await Author.findAll();

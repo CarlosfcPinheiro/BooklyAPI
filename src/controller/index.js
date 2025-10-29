@@ -1,5 +1,5 @@
 import { getAllAuthor, getAuthorById, createAuthor, updateAuthorById, deleteAuthorById } from "./author.js";
-import { getAllBooks, getBookById, createBook, updateBookById, deleteBookById} from "./book.js";
+import { getAllBooks, getBookById, createBook, updateBookById, deleteBookById, getAllBooksByAuthorId, getAllBooksByGenderId} from "./book.js";
 import { getAllReviews, getReviewsByBookId, getReviewById, getAvgReviewsByBookId, getReviewsByUserId, createReview, updateReviewById, deleteReviewById 
 } from "./review.js";
 import { getAllUsers, getUserById, createUser, updateUserById, deleteUserById } from "./user.js";
@@ -9,7 +9,9 @@ const book = {
     getBookById, 
     createBook, 
     updateBookById, 
-    deleteBookById
+    deleteBookById,
+    getAllBooksByAuthorId,
+    getAllBooksByGenderId
 };
 
 const author = {
