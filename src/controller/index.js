@@ -3,6 +3,7 @@ import { getAllBooks, getBookById, createBook, updateBookById, deleteBookById, g
 import { getAllReviews, getReviewsByBookId, getReviewById, getAvgReviewsByBookId, getReviewsByUserId, createReview, updateReviewById, deleteReviewById 
 } from "./review.js";
 import { getAllUsers, getUserById, createUser, updateUserById, deleteUserById } from "./user.js";
+import { getAllGenders,getGenderById,createGender,updateGenderById,deleteGenderById } from '../controller/gender.js';
 
 const book = {
     getAllBooks, 
@@ -39,6 +40,14 @@ const user = {
     createUser,
     updateUserById,
     deleteUserById
-}
+};
 
-export { review, book, author, user };
+const gender = {
+    getAllGenders,
+    getGenderById,
+    createGender,
+    updateGenderById,
+    deleteGenderById
+};
+
+export { review, book, author, user, gender };

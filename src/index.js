@@ -19,7 +19,7 @@ app.use("/reviews", router.review);
 app.use("/authors", router.author);
 app.use("/books", router.book);
 app.use("/users", router.user);
-
+app.use("/genders", router.gender);
 
 app.get("/", (req, res) =>{
     res.send("API biblioteca.");
