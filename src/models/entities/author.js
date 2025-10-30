@@ -14,6 +14,10 @@ const getAuthorModel = (sequelize, {DataTypes}) => {
             type: DataTypes.STRING(100),
             allowNull: false,
         },
+        bio: {
+            type: DataTypes.TEXT,
+            allowNull: true,
+        },
         nationality: {
             type: DataTypes.STRING(50),
             allowNull: false,

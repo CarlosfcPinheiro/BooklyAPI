@@ -38,7 +38,14 @@ const getUserModel = (sequelize, {DataTypes}) => {
             validate: {
                 notEmpty: true,
             },
-
+        },
+        description: {
+            type: DataTypes.TEXT,
+            allowNull: true,
+        },
+        profilePhotoUrl: {
+            type: DataTypes.TEXT,
+            allowNull: true,
         }
     });
     

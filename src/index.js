@@ -2,11 +2,10 @@ import express from "express";
 //import routes from "./routes/index.js";
 import "dotenv/config";
 import cors from "cors";
-import models, {sequelize} from "./models/index.js";
+import {sequelize} from "./models/index.js";
 import router from "./routes/index.js";
 
-import users from "./utils/defaultUsers.js";
-import books from "./utils/defaultBooks.js";
+import populateDb from "./utils/db/populateDb.js";
 
 const app = express();
 const port = process.env.PORT ?? 3000;
@@ -30,21 +29,12 @@ const eraseDatabseOnSync = process.env.ERASE_DATABASE === 'true';
 sequelize.sync({ force: eraseDatabseOnSync }).then(async() => {
     if (eraseDatabseOnSync){
         await populateDb();
-        console.log('Banco de dados reiniciado!');
+        console.log('🧹 Banco de dados reiniciado!');
     }
 
     app.listen(port, () => {
-        console.log(`Servidor ouvindo na porta ${port}...`);
+        console.log(`🛜 Servidor ouvindo na porta ${port}...`);
     });
 });
-
-const populateDb = async() => {
-    users.forEach( async (userData) => {
-        const user = await models.user.create(userData);
-    });
-    books.forEach( async (bookData) => {
-        const book = await models.book.create(bookData);
-    });
-}
 
 export default app;

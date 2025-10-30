@@ -14,6 +14,10 @@ const getGenderModel = (sequelize, {DataTypes}) => {
             type: DataTypes.STRING(100),
             allowNull: false,
         },
+        description: {
+            type: DataTypes.TEXT,
+            allowNull: true,
+        },
     });
 
     gender.associate = (models) =>{

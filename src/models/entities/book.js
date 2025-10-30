@@ -18,11 +18,11 @@ const getBookModel = (sequelize, {DataTypes}) => {
             },
         },
         imgUrl: {
-            type: DataTypes.STRING,
+            type: DataTypes.TEXT,
             allowNull: true,
         },
         description: {
-            type: DataTypes.STRING(150),
+            type: DataTypes.TEXT,
             allowNull: false,
             validate: {
                 notEmpty: true,

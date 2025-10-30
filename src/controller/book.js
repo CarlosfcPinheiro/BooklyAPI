@@ -1,12 +1,16 @@
-import req from "express/lib/request.js";
+import { Op } from "sequelize";
 import models from "../models/index.js";
 
 const Book = models.book;
 
-//TODO adicionar query param de busca por titulo do livro aplicando regex para busca parcial, ex /books?name=jo retorna todos os livros com "jo" no nome
 const getAllBooks = async (req, res) => {
     try{
-        const books = await Book.findAll();
+        const {title} = req.query;
+        const books = await Book.findAll({
+            where: {
+                title: {[Op.iLike]: `%${title || ''}%`
+            }
+        }});
         if(!books || books.length == 0){
             return res.status(404).json({message: "Nenhum livro encontrado"});
         }
