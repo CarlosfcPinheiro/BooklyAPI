@@ -1,4 +1,4 @@
-const gettokenModel = (sequelize, {DataTypes}) => {
+const getTokenModel = (sequelize, {DataTypes}) => {
     const token = sequelize.define ("Token", {
         id: {
             type: DataTypes.STRING,

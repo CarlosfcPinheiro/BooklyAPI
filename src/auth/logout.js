@@ -21,3 +21,5 @@ export const logout = async (req, res) => {
     return res.status(500).json({ message: "Erro interno do servidor." });
   }
 };
+
+export default logout;

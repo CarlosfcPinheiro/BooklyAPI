@@ -6,6 +6,7 @@ import getBookModel from "./entities/book.js";
 import getGenderModel from "./entities/gender.js";
 import getUserModel from "./entities/user.js";
 import getReviewModel from "./entities/review.js";
+import getTokenModel from "./entities/token.js";
 
 // defindo o objeto sequelize
 const sequelize = new Sequelize(process.env.POSTGRES_URL, {
@@ -26,6 +27,7 @@ const models = {
   author: getAuthorModel(sequelize, Sequelize),
   book: getBookModel(sequelize, Sequelize),
   gender: getGenderModel(sequelize, Sequelize),
+  token: getTokenModel(sequelize, Sequelize),
   user: getUserModel (sequelize, Sequelize),
   review: getReviewModel (sequelize, Sequelize),
 };

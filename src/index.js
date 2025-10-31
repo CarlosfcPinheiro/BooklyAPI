@@ -3,7 +3,9 @@ import express from "express";
 import "dotenv/config";
 import cors from "cors";
 import {sequelize} from "./models/index.js";
+
 import router from "./routes/index.js";
+import authRouter from "./auth/index.js";
 
 import populateDb from "./utils/db/populateDb.js";
 
@@ -19,6 +21,7 @@ app.use("/authors", router.author);
 app.use("/books", router.book);
 app.use("/users", router.user);
 app.use("/genders", router.gender);
+app.use("/auth", authRouter);
 
 app.get("/", (req, res) =>{
     res.send("API biblioteca.");

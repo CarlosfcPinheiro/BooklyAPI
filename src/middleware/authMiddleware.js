@@ -37,3 +37,5 @@ export const authMiddleware = async (req, res, next) => {
     return res.status(401).json({ message: "Token inválido ou expirado" });
   }
 };
+
+export default authMiddleware;
