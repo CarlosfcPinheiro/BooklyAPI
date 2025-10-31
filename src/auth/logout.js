@@ -4,7 +4,7 @@ export const logout = async (req, res) => {
   try {
     const tokenId = req.user.tokenId;
 
-    const deletedCount = await models.Token.destroy({
+    const deletedCount = await models.token.destroy({
       where: {
         id: tokenId
       }
