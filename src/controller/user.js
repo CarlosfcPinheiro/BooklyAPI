@@ -4,7 +4,7 @@ const User = models.user;
 
 const getAllUsers = async (req, res) => {
     try {
-        const users = await Review.findAll();
+        const users = await User.findAll();
         if(!users || users.lenght == 0){
             return res.status(404).json({message: "Nenhum usurário encontrado"});
         }
@@ -12,7 +12,7 @@ const getAllUsers = async (req, res) => {
         res.status(200).json({message: "Usuários encontrados com sucesso", data: users});
 
     } catch(error) {
-        res.status(500).json({message: "Erro ao buscar reviews", error: error.message});
+        res.status(500).json({message: "Erro ao buscar usuários", error: error.message});
     }
 };
 
