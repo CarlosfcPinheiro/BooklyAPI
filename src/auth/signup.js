@@ -4,17 +4,19 @@ import "dotenv/config";
 import { v4 as uuidv4 } from "uuid";
 import models from "../models/index.js";
 
+const User = models.user;
+const Token = models.token;
+
 const signUp =  async (req, res) => {
     const { email, password, name, description } = req.body;
     try {
-        const existingUser = await models.user.findOne({ where: { email } });
+        const existingUser = await User.findOne({ where: { email } });
         if (existingUser) {
-            return res.status(400).json({ message: "Email already in use" });
+            return res.status(400).json({ message: "Email já está em uso" });
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
-        
-        const newUser = await models.user.create({
+        const newUser = await User.create({
             id: uuidv4(),
             email: email,
             password: hashedPassword,
@@ -23,14 +25,16 @@ const signUp =  async (req, res) => {
         });
 
         let tokenId = uuidv4();
-        
         let token = jwt.sign({ userId: newUser.id, tokenId: tokenId }, process.env.SECRET_KEY, { expiresIn: "1h" });
         
-        await models.token.create({ id: tokenId });
+        await Token.create({ id: tokenId });
         
-        res.status(201).json({ token });
+        res.status(201).json({
+            token: token,
+            data: newUser
+         });
     } catch (error) {
-        res.status(500).json({ message: "Internal server error" });
+        res.status(500).json({ message: "Erro ao registrar novo usuário" });
     }
 }
 
