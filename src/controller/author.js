@@ -1,10 +1,8 @@
-import models from "../models/index.js"
-
-const Author = models.author;
 
 //TODO adicionar query param de busca por nome do autor aplicando regex para busca parcial, ex /author?name=jo retorna todos os autores com "jo" no nome
 const getAllAuthor = async (req, res) => {
     try {
+        const Author = req.context.models.author;
         const authors = await Author.findAll();
         if (!authors || authors.length == 0){
             return res.status(404).json({message: "Nenhum autor(a) foi encontrado"});
@@ -19,6 +17,7 @@ const getAllAuthor = async (req, res) => {
 
 const getAuthorById = async (req, res) => {
     try{
+        const Author = req.context.models.author;
         const { id } = req.params;
         const author = await Author.findByPk(id);
         if(!author) {
@@ -34,6 +33,7 @@ const getAuthorById = async (req, res) => {
 
 const createAuthor = async (req, res) => {
     try{
+        const Author = req.context.models.author;
         const {name, nationality, birthDate, bio} = req.body
         const author = await Author.create({
             name: name,
@@ -51,6 +51,7 @@ const createAuthor = async (req, res) => {
 
 const updateAuthorById = async (req, res) => {
     try{
+        const Author = req.context.models.author;
         const { id } = req.params;
         const {name, nationality, birthDate} = req.body;
 
@@ -74,6 +75,7 @@ const updateAuthorById = async (req, res) => {
 
 const deleteAuthorById = async (req, res) => {
     try {
+        const Author = req.context.models.author;
         const {id} = req.params;
         const author = await Author.findByPk(id);
         if(!author){

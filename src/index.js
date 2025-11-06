@@ -1,8 +1,9 @@
 import express from "express";
-//import routes from "./routes/index.js";
 import "dotenv/config";
 import cors from "cors";
+
 import {sequelize} from "./models/index.js";
+import models from "./models/index.js";
 
 import router from "./routes/index.js";
 import authRouter from "./auth/index.js";
@@ -14,6 +15,12 @@ const port = process.env.PORT ?? 3000;
 // Aplicar middlewares globais
 app.use(cors());
 app.use(express.json());
+
+// Aplicar contexto de models
+app.use((req, res, next) => {
+    req.context = {models};
+    next();
+});
 
 // Aplicar middlewares de rotas
 app.use("/reviews", router.review);

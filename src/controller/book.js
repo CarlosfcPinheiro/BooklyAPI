@@ -1,10 +1,8 @@
 import { Op } from "sequelize";
-import models from "../models/index.js";
-
-const Book = models.book;
 
 const getAllBooks = async (req, res) => {
     try{
+        const Book = req.context.models.book;
         const {title} = req.query;
         const books = await Book.findAll({
             where: {
@@ -28,6 +26,7 @@ const getAllBooks = async (req, res) => {
 
 const getBookById = async (req, res) => {
     try{
+        const Book = req.context.models.book;
         const {id} = req.params;
         const book = await Book.findByPk(id);
         if(!book){
@@ -49,6 +48,7 @@ const getBookById = async (req, res) => {
 //TODO adicionar lógica de criação de autor caso ainda não exista
 const createBook = async (req, res) => {
     try{
+        const Book = req.context.models.book;
         const {title, description, year, imgUrl} = req.body;
         const {authorId, genderId} = req.query;
 
@@ -79,6 +79,7 @@ const createBook = async (req, res) => {
 
 const updateBookById = async (req, res) => {
     try{
+        const Book = req.context.models.book;
         const {id} = req.params;
         const {title, description, year} = req.body;
 
@@ -107,6 +108,7 @@ const updateBookById = async (req, res) => {
 
 const deleteBookById = async (req, res) => {
     try {
+        const Book = req.context.models.book;
         const {id} = req.params;
         const book = await Book.findByPk(id);
         if(!book){
@@ -127,6 +129,7 @@ const deleteBookById = async (req, res) => {
 
 const getAllBooksByAuthorId = async (req, res) => {
     try{
+        const Book = req.context.models.book;
         const {authorId} = req.params;
         const books = await Book.findAllByAuthorId(authorId);
         if(!books || books.length === 0){
@@ -147,6 +150,7 @@ const getAllBooksByAuthorId = async (req, res) => {
 
 const getAllBooksByGenderId = async (req, res) => {
     try{
+        const Book = req.context.models.book;
         const {genderId} = req.params;
         const books = await Book.findAllByGenderId(genderId);
         if(!books || books.length === 0){

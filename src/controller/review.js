@@ -1,9 +1,7 @@
-import models from "../models/index.js" 
-
-const Review = models.review;
 
 const getAllReviews = async (req, res) => {
     try {
+        const Review = req.context.models.review;
         const reviews = await Review.findAll();
         if (!reviews || reviews.length === 0){
             return res.status(404).json({ message: "Nenhuma review encontrada" });
@@ -19,6 +17,7 @@ const getAllReviews = async (req, res) => {
 
 const getReviewById = async (req, res) =>  {
     try{
+        const Review = req.context.models.review;
         const { id } = req.params;
         const review = await Review.findByPk(id);
         if (!review){
@@ -35,6 +34,7 @@ const getReviewById = async (req, res) =>  {
 
 const createReview = async (req, res) =>  {
     try {
+        const Review = req.context.models.review;
         const { userId, bookId } = req.query;
         const { rate, comment } = req.body;
         if (!userId || !bookId) {
@@ -59,6 +59,7 @@ const createReview = async (req, res) =>  {
 
 const updateReviewById = async (req, res) =>  {
     try {
+        const Review = req.context.models.review;
         const { id } = req.params;
         const { rate, comment } = req.body;
 
@@ -83,6 +84,7 @@ const updateReviewById = async (req, res) =>  {
 
 const deleteReviewById = async (req, res) =>  {
     try {
+        const Review = req.context.models.review;
         const { id } = req.params;
 
         const review = await Review.findByPk(id);
@@ -102,6 +104,7 @@ const deleteReviewById = async (req, res) =>  {
 
 const getReviewsByUserId = async (req, res) =>  {
     try {
+        const Review = req.context.models.review;
         const { userId } = req.params;
         const reviews = await Review.findAllByUserId(userId);
         if (!reviews || reviews.length === 0){
@@ -119,6 +122,7 @@ const getReviewsByUserId = async (req, res) =>  {
 
 const getReviewsByBookId = async (req, res) =>  {
     try {
+        const Review = req.context.models.review;
         const { bookId } = req.params;
         const reviews = await Review.findAllByBookId(bookId);
         if (!reviews || reviews.length === 0){
@@ -136,6 +140,7 @@ const getReviewsByBookId = async (req, res) =>  {
 
 const getAvgReviewsByBookId = async (req, res) =>  {
     try {
+        const Review = req.context.models.review;
         const { bookId } = req.params;
         const avgRating = await Review.getAverageRatingByBookId(bookId);
         if (avgRating === null){

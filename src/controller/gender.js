@@ -1,9 +1,7 @@
-import models from "../models/index.js"
-
-const Gender = models.gender
 
 const getAllGenders = async (req, res) => {
     try{
+        const Gender = req.context.models.gender;
         const gender = await Gender.findAll();
         if(!gender || gender.lengh == 0){
             return res.status(404).jason({message: "Nenhum gênero encontrado"});
@@ -23,6 +21,7 @@ const getAllGenders = async (req, res) => {
 
 const getGenderById = async (req, res) => {
     try { 
+        const Gender = req.context.models.gender;
         const {id} = req.params;
         const gender = await Gender.findByPk(id);
         if(!gender){
@@ -43,6 +42,7 @@ const getGenderById = async (req, res) => {
 
 const createGender = async (req, res) => {
     try {
+        const Gender = req.context.models.gender;
         const {name, description} = req.body;
         const gender = await Gender.findOne({
             where: {name}
@@ -70,6 +70,7 @@ const createGender = async (req, res) => {
 
 const updateGenderById = async (req, res) => {
     try {
+        const Gender = req.context.models.gender;
         const {id} = req.params;
         const {name} = req.body;
         const gender = await Gender.findByPk(id);
@@ -94,6 +95,7 @@ const updateGenderById = async (req, res) => {
 
 const deleteGenderById = async (req, res) => {
     try {
+        const Gender = req.context.models.gender;
         const {id} = req.params;
         const gender = await Gender.findByPk(id);
         if(!gender){

@@ -1,10 +1,8 @@
 import bcrypt from "bcryptjs";
-import models from "../models/index.js"
-
-const User = models.user;
 
 const getAllUsers = async (req, res) => {
     try {
+        const User = req.context.models.user;
         const users = await User.findAll();
         if(!users || users.lenght == 0){
             return res.status(404).json({message: "Nenhum usurário encontrado"});
@@ -18,13 +16,15 @@ const getAllUsers = async (req, res) => {
 };
 
 const getUserById = async (req, res) => {
-    try {const { id } = req.params;
-    const user = await User.findByPk(id);
-    if(!user){
-        return res.status(404).json({message: "Usuário não encontrado"});
-    }
+    try {
+        const User = req.context.models.user;
+        const { id } = req.params;
+        const user = await User.findByPk(id);
+        if(!user){
+            return res.status(404).json({message: "Usuário não encontrado"});
+        }
 
-    res.status(200).json({message: "Usuario encontrado com sucesso", data: user});
+        res.status(200).json({message: "Usuario encontrado com sucesso", data: user});
 
     }catch(error) {
         res.status(500).json({message: "Erro ao encontrar o usuário", error: error.message});
@@ -34,6 +34,7 @@ const getUserById = async (req, res) => {
 
 const createUser = async (req, res) => {
     try{
+        const User = req.context.models.user;
         const {name, email, password, description, profilePhotorl} = req.body;
         const user = await User.create({
             name: name,
@@ -54,6 +55,7 @@ const createUser = async (req, res) => {
 
 const updateUserById = async (req, res) => {
     try {
+        const User = req.context.models.user;
         const {id} = req.params;
         const {name, email, password} = req.body;
 
@@ -77,6 +79,7 @@ const updateUserById = async (req, res) => {
 
 const deleteUserById = async (req, res) => {
     try{
+        const User = req.context.models.user;
         const { id } = req.params;
 
         const user = await User.findByPk(id);
