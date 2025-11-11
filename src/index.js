@@ -29,6 +29,7 @@ app.use("/books", router.book);
 app.use("/users", router.user); 
 app.use("/genders", router.gender);
 app.use("/auth", authRouter);
+app.use('/favorites', router.favorite);
 
 app.get("/", (req, res) =>{
     res.send("API biblioteca.");

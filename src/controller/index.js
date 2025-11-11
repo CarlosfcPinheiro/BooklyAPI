@@ -4,6 +4,7 @@ import { getAllReviews, getReviewsByBookId, getReviewById, getAvgReviewsByBookId
 } from "./review.js";
 import { getAllUsers, getUserById, createUser, updateUserById, deleteUserById } from "./user.js";
 import { getAllGenders,getGenderById,createGender,updateGenderById,deleteGenderById } from '../controller/gender.js';
+import { getAllFavorites, getFavoriteById, getAllFavoritesByUserId, createFavorite, deleteFavoriteById, deleteFavoriteByUserAndBook } from "./favorite.js";
 
 const book = {
     getAllBooks, 
@@ -50,4 +51,13 @@ const gender = {
     deleteGenderById
 };
 
-export { review, book, author, user, gender };
+const favorite = {
+    getAllFavorites,
+    getFavoriteById,
+    getAllFavoritesByUserId,
+    createFavorite,
+    deleteFavoriteById,
+    deleteFavoriteByUserAndBook
+};
+
+export { review, book, author, user, gender, favorite };
