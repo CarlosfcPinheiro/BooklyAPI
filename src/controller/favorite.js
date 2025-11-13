@@ -1,6 +1,7 @@
+//TODO refatorar para usar services e objeto de controller padrao para agrupar as funções
 const getAllFavorites = async(req, res) => {
     try {
-        const Favorite = req.context.models.Favorite;
+        const Favorite = req.context.models.favorite;
         const favorites = await Favorite.findAll();
         if (!favorites || favorites.length === 0) {
             return res.status(404).json({ message: 'Nenhum favorito encontrado' });
@@ -11,13 +12,16 @@ const getAllFavorites = async(req, res) => {
             data: favorites
         });
     } catch(error){
-        res.status(500).json({ message: 'Erro interno no servidor ao buscar todas os favoritos', error: error.message });
+        res.status(500).json({ 
+            message: 'Erro interno no servidor ao buscar todos os favoritos',
+             error: error.message 
+        });
     }
 }
 
 const getFavoriteById = async(req, res) => {
     try {
-        const Favorite = req.context.models.Favorite;
+        const Favorite = req.context.models.favorite;
         const { id } = req.params;
         const favorite = await Favorite.findByPk(id);
         if (!favorite) {
@@ -29,13 +33,16 @@ const getFavoriteById = async(req, res) => {
             data: favorite
         });
     } catch(error){
-        res.status(500).json({ message: 'Erro interno no servidor ao buscar o favorito por ID', error: error.message });
+        res.status(500).json({ 
+            message: 'Erro interno no servidor ao buscar o favorito por ID',
+            error: error.message 
+        });
     }
 }
 
 const getAllFavoritesByUserId = async(req, res) => {
     try {
-        const Favorite = req.context.models.Favorite;
+        const Favorite = req.context.models.favorite;
         const { userId } = req.params;
         const favorites = await Favorite.findAllByUserId(userId);
         if (!favorites || favorites.length === 0) {
@@ -47,17 +54,28 @@ const getAllFavoritesByUserId = async(req, res) => {
             data: favorites
         });
     } catch(error){
-        res.status(500).json({ message: 'Erro interno no servidor ao buscar favoritos por ID de usuário', error: error.message });
+        res.status(500).json({ 
+            message: 'Erro interno no servidor ao buscar favoritos por ID de usuário', 
+            error: error.message 
+        });
     }
 }
 
 const createFavorite = async(req, res) => {
     try {
-        const Favorite = req.context.models.Favorite;
+        const Favorite = req.context.models.favorite;
+        const User = req.context.models.user;
+        const Book = req.context.models.book;
         const { userId, bookId } = req.query;
         if (!userId || !bookId){
             return res.status(400).json({ message: 'userId e bookId são obrigatórios para criar um favorito' });
         }
+
+        const user = await User.findByPk(userId);
+        if (!user) return res.status(404).json({ message: 'Usuário não encontrado' });
+
+        const book = await Book.findByPk(bookId);
+        if (!book) return res.status(404).json({ message: 'Livro não encontrado' });
 
         const newFavorite = await Favorite.create({ 
             UserId : userId, 
@@ -69,13 +87,16 @@ const createFavorite = async(req, res) => {
             data: newFavorite
         });
     } catch(error){
-        res.status(500).json({ message: 'Erro interno no servidor ao criar o favorito', error: error.message });
+        res.status(500).json({ 
+            message: 'Erro interno no servidor ao criar o favorito', 
+            error: error.message 
+        });
     }
 }
 
 const deleteFavoriteById = async(req, res) => {
     try {
-        const Favorite = req.context.models.Favorite;
+        const Favorite = req.context.models.favorite;
         const { id } = req.params;
         const favorite = await Favorite.findByPk(id);
         if (!favorite) {
@@ -92,11 +113,18 @@ const deleteFavoriteById = async(req, res) => {
 
 const deleteFavoriteByUserAndBook = async(req, res) => {
     try {
-        const Favorite = req.context.models.Favorite;
+        const Favorite = req.context.models.favorite;
+        const User = req.context.models.user;
+        const Book = req.context.models.book;
         const { userId, bookId } = req.query;
         if (!userId || !bookId){
             return res.status(400).json({ message: 'userId e bookId são obrigatórios para deletar um favorito' });
         }
+
+        const user = await User.findByPk(userId);
+        if (!user) return res.status(404).json({ message: 'Usuário não encontrado' });
+        const book = await Book.findByPk(bookId);
+        if (!book) return res.status(404).json({ message: 'Livro não encontrado' });
 
         const favorite = await Favorite.findOne({ where: { UserId: userId, BookId: bookId } });
         if (!favorite) {
