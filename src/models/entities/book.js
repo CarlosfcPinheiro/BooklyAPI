@@ -39,6 +39,7 @@ const getBookModel = (sequelize, {DataTypes}) => {
         book.belongsTo(models.gender);
 
         book.hasMany(models.review, {onDelete: "CASCADE"});
+        book.hasMany(models.favorite, {onDelete: "CASCADE"});
     };
 
     book.findAllByAuthorId = async(authorId) => {
