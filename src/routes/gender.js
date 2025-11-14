@@ -1,13 +1,13 @@
 import express from 'express';
-import { gender } from '../controller/index.js';
+import GenderController from '../controller/gender.js';
 
 const router = express.Router();
 
-router.get('/', gender.getAllGenders);
-router.get('/:id', gender.getGenderById);
+router.get('/', GenderController.getAllGenders);
+router.get('/:id', GenderController.getGenderById);
 
-router.post('/', gender.createGender);
-router.put('/:id', gender.updateGenderById);
-router.delete('/:id', gender.deleteGenderById);
+router.post('/', GenderController.createGender);
+router.put('/:id', GenderController.updateGenderById);
+router.delete('/:id', GenderController.deleteGenderById);
 
 export default router;

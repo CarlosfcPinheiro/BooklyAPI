@@ -1,15 +1,15 @@
 import express from 'express';
-import { favorite } from '../controller/index.js';
+import FavoriteController from '../controller/favorite.js';
 
 const router = express.Router();
 
-router.get('/', favorite.getAllFavorites);
-router.get('/:id', favorite.getFavoriteById);
-router.get('/user/:userId', favorite.getAllFavoritesByUserId);
+router.get('/', FavoriteController.getAllFavorites);
+router.get('/:id', FavoriteController.getFavoriteById);
+router.get('/user/:userId', FavoriteController.getAllFavoritesByUserId);
 
-router.post('/', favorite.createFavorite);
+router.post('/', FavoriteController.createFavorite);
 
-router.delete('/:id', favorite.deleteFavoriteById);
-router.delete('/', favorite.deleteFavoriteByUserAndBook);
+router.delete('/:id', FavoriteController.deleteFavoriteById);
+router.delete('/', FavoriteController.deleteFavoriteByUserAndBook);
 
 export default router;
