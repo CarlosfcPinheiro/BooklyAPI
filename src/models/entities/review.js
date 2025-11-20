@@ -64,8 +64,8 @@ const getReviewModel = (sequelize, {DataTypes}) => {
             ],
             raw: true,
         });
-
-        return result[0].avgRate;
+        const avgRate = parseFloat(result[0].avgRate).toFixed(2);
+        return avgRate;
     }
     
 

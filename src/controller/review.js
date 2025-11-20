@@ -143,14 +143,14 @@ const ReviewController = {
         try {
             const Review = req.context.models.review;
             const { bookId } = req.params;
-            const avgRating = await Review.getAverageRatingByBookId(bookId);
+            const avgRating = await Review.getAvgRateByBookId(bookId);
             if (avgRating === null){
                 return res.status(404).json({ message: "Nenhuma review encontrada para este livro" });
             }
 
             res.status(200).json({
                 message: 'Média das reviews do livro encontrada com sucesso',
-                data: avgRating
+                data: { avg: avgRating }
             });
         } catch(error) {
             res.status(500).json({ message: "Erro ao buscar média das reviews do livro", error: error.message });
