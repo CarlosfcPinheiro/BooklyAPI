@@ -30,7 +30,7 @@ const getBookModel = (sequelize, {DataTypes}) => {
         },
         year: {
             type:DataTypes.SMALLINT,
-            allowNull: false,
+            allowNull: true,
         }
     });
 
