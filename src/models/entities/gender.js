@@ -23,6 +23,17 @@ const getGenderModel = (sequelize, {DataTypes}) => {
     gender.associate = (models) =>{
         gender.hasMany (models.book, {onDelete: "CASCADE"});
     };
+
+    gender.findOrCreateByName = async (name, defaultDescription) => {
+        return await gender.findOrCreate({
+            where: { name: name},
+            defaults: {
+                name: name,
+                description: defaultDescription || null
+            }
+        });
+    }
+
     return gender;
 };
 
