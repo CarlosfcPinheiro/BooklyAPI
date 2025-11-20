@@ -11,7 +11,7 @@ const BookController = {
                 }
             }});
             if(!books || books.length == 0){
-                return res.status(404).json({message: "Nenhum livro encontrado"});
+                return res.status(204).json({message: "Nenhum livro encontrado"});
             }
             res.status(200).json({
                 message:"Livros encontrados com sucesso", 
