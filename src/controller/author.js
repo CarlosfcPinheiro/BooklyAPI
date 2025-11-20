@@ -6,7 +6,7 @@ const AuthorController = {
             const Author = req.context.models.author;
             const authors = await Author.findAll();
             if (!authors || authors.length == 0){
-                return res.status(404).json({message: "Nenhum autor(a) foi encontrado"});
+                return res.status(204).json({message: "Nenhum autor(a) foi encontrado"});
             }
 
             res.status(200).json({message: "Autores(as) encontrados com sucesso", data: authors})

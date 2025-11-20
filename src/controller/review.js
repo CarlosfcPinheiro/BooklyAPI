@@ -5,7 +5,7 @@ const ReviewController = {
             const Review = req.context.models.review;
             const reviews = await Review.findAll();
             if (!reviews || reviews.length === 0){
-                return res.status(404).json({ message: "Nenhuma review encontrada" });
+                return res.status(204).json({ message: "Nenhuma review encontrada" });
             }
             res.status(200).json({
                 message: 'Reviews encontradas com sucesso',
@@ -22,7 +22,7 @@ const ReviewController = {
             const { id } = req.params;
             const review = await Review.findByPk(id);
             if (!review){
-                return res.status(404).json({ message: "Review não encontrada" });
+                return res.status(204).json({ message: "Review não encontrada" });
             }
             res.status(200).json({
                 message: 'Review encontrada com sucesso',

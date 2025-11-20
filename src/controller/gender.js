@@ -5,7 +5,7 @@ const GenderController = {
             const Gender = req.context.models.gender;
             const gender = await Gender.findAll();
             if(!gender || gender.lengh == 0){
-                return res.status(404).jason({message: "Nenhum gênero encontrado"});
+                return res.status(204).json({message: "Nenhum gênero encontrado"});
             }
 
             res.status(200).json({

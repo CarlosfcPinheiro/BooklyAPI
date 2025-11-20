@@ -6,7 +6,7 @@ const UserController = {
             const User = req.context.models.user;
             const users = await User.findAll();
             if(!users || users.lenght == 0){
-                return res.status(404).json({message: "Nenhum usurário encontrado"});
+                return res.status(204).json({message: "Nenhum usurário encontrado"});
             }
 
             res.status(200).json({

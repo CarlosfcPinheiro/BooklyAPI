@@ -6,7 +6,7 @@ const FavoriteController = {
             const Favorite = req.context.models.favorite;
             const favorites = await Favorite.findAll();
             if (!favorites || favorites.length === 0) {
-                return res.status(404).json({ message: 'Nenhum favorito encontrado' });
+                return res.status(204).json({ message: 'Nenhum favorito encontrado' });
             }
 
             res.status(200).json({
