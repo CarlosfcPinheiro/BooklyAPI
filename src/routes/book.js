@@ -1,12 +1,13 @@
 import express from "express"
 import BookController from "../controller/book.js";
+import authMiddleware from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-router.get("/", BookController.getAllBooks);
-router.get("/:id", BookController.getBookById);
-router.get("/author/:authorId", BookController.getAllBooksByAuthorId);
-router.get("/gender/:genderId", BookController.getAllBooksByGenderId);
+router.get("/", authMiddleware, BookController.getAllBooks);
+router.get("/:id", authMiddleware, BookController.getBookById);
+router.get("/author/:authorId", authMiddleware, BookController.getAllBooksByAuthorId);
+router.get("/gender/:genderId", authMiddleware, BookController.getAllBooksByGenderId);
 
 router.post("/", BookController.createBook);
 router.put("/:id", BookController.updateBookById);

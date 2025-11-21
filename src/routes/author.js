@@ -1,13 +1,14 @@
 import express from "express"
 import AuthorController from "../controller/author.js";
+import authMiddleware from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-router.get("/", AuthorController.getAllAuthor);
-router.get("/:id", AuthorController.getAuthorById);
+router.get("/", authMiddleware, AuthorController.getAllAuthor);
+router.get("/:id", authMiddleware, AuthorController.getAuthorById);
 
-router.post("/", AuthorController.createAuthor);
-router.put("/:id", AuthorController.updateAuthorById);
-router.delete("/:id", AuthorController.deleteAuthorById);
+router.post("/", authMiddleware, AuthorController.createAuthor);
+router.put("/:id", authMiddleware, AuthorController.updateAuthorById);
+router.delete("/:id", authMiddleware, AuthorController.deleteAuthorById);
 
 export default router

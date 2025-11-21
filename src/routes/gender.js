@@ -1,13 +1,14 @@
 import express from 'express';
 import GenderController from '../controller/gender.js';
+import authMiddleware from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
-router.get('/', GenderController.getAllGenders);
-router.get('/:id', GenderController.getGenderById);
+router.get('/', authMiddleware, GenderController.getAllGenders);
+router.get('/:id', authMiddleware, GenderController.getGenderById);
 
-router.post('/', GenderController.createGender);
-router.put('/:id', GenderController.updateGenderById);
-router.delete('/:id', GenderController.deleteGenderById);
+router.post('/', authMiddleware, GenderController.createGender);
+router.put('/:id', authMiddleware, GenderController.updateGenderById);
+router.delete('/:id', authMiddleware, GenderController.deleteGenderById);
 
 export default router;
