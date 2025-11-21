@@ -63,24 +63,26 @@ const FavoriteController = {
         }
     },
 
+    //TODO evitar que um usuário crie favoritos para um mesmo livro mais de uma vez
     createFavorite: async(req, res) => {
         try {
             const Favorite = req.context.models.favorite;
             const User = req.context.models.user;
             const Book = req.context.models.book;
-            const { userId, bookId } = req.query;
-            if (!userId || !bookId){
-                return res.status(400).json({ message: 'userId e bookId são obrigatórios para criar um favorito' });
+            const authenticatedUserId = req.user.userId; // do token JWT
+            const { bookId } = req.query;
+            if (!bookId){
+                return res.status(400).json({ message: 'bookId é obrigatório para criar um favorito' });
             }
 
-            const user = await User.findByPk(userId);
+            const user = await User.findByPk(authenticatedUserId);
             if (!user) return res.status(404).json({ message: 'Usuário não encontrado' });
 
             const book = await Book.findByPk(bookId);
             if (!book) return res.status(404).json({ message: 'Livro não encontrado' });
 
             const newFavorite = await Favorite.create({ 
-                UserId : userId, 
+                UserId : authenticatedUserId, 
                 BookId: bookId 
             });
 
@@ -118,23 +120,24 @@ const FavoriteController = {
             const Favorite = req.context.models.favorite;
             const User = req.context.models.user;
             const Book = req.context.models.book;
-            const { userId, bookId } = req.query;
-            if (!userId || !bookId){
-                return res.status(400).json({ message: 'userId e bookId são obrigatórios para deletar um favorito' });
+            const authenticatedUserId = req.user.userId; // do token JWT
+            const { bookId } = req.query;
+            if (!bookId){
+                return res.status(400).json({ message: 'bookId é obrigatório para deletar um favorito' });
             }
 
-            const user = await User.findByPk(userId);
+            const user = await User.findByPk(authenticatedUserId);
             if (!user) return res.status(404).json({ message: 'Usuário não encontrado' });
             const book = await Book.findByPk(bookId);
             if (!book) return res.status(404).json({ message: 'Livro não encontrado' });
 
-            const favorite = await Favorite.findOne({ where: { UserId: userId, BookId: bookId } });
+            const favorite = await Favorite.findOne({ where: { UserId: authenticatedUserId, BookId: bookId } });
             if (!favorite) {
                 return res.status(404).json({ message: 'Favorito não encontrado para o usuário e livro fornecidos' });
             }
 
             await Favorite.destroy({ 
-                where: { UserId: userId, BookId: bookId } 
+                where: { UserId: authenticatedUserId, BookId: bookId } 
             });
 
             res.status(200).json({ message: 'Favorito deletado com sucesso' });

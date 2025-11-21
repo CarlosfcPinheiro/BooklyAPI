@@ -3,7 +3,7 @@ import "dotenv/config";
 import models from "../models/index.js";
 
 export const authMiddleware = async (req, res, next) => {
-    const authHeader = req.headers.authorization;
+  const authHeader = req.headers.authorization;
 
   if (!authHeader) {
     return res.status(401).json({ message: "Token não fornecido" });
@@ -11,7 +11,7 @@ export const authMiddleware = async (req, res, next) => {
 
   const parts = authHeader.split(" ");
   if (parts.length !== 2) {
-      return res.status(401).json({ message: "Erro no formato do token" });
+    return res.status(401).json({ message: "Erro no formato do token" });
   }
 
   const [scheme, token] = parts;
@@ -33,9 +33,9 @@ export const authMiddleware = async (req, res, next) => {
     req.user = payload; 
 
     return next();
-  } catch (error) {
-    return res.status(401).json({ message: "Token inválido ou expirado" });
-  }
+    } catch (error) {
+      return res.status(401).json({ message: "Token inválido ou expirado" });
+    }
 };
 
 export default authMiddleware;

@@ -36,14 +36,15 @@ const ReviewController = {
     createReview: async (req, res) =>  {
         try {
             const Review = req.context.models.review;
-            const { userId, bookId } = req.query;
+            const authenticatedUserId = req.user.userId; // do token JWT
+            const { bookId } = req.query;
             const { rate, comment } = req.body;
-            if (!userId || !bookId) {
-                return res.status(400).json({ message: "userId e bookId são obrigatórios" });
+            if (!bookId) {
+                return res.status(400).json({ message: "bookId é obrigatório" });
             }
 
             const review = await Review.create({
-                UserId: userId,
+                UserId: authenticatedUserId,
                 BookId: bookId,
                 rate: rate,
                 comment: comment
