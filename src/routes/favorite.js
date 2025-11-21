@@ -5,13 +5,14 @@ import ownershipMiddleware from '../middleware/ownershipMiddleware.js';
 
 const router = express.Router();
 
-router.get('/', FavoriteController.getAllFavorites);
-router.get('/:id', FavoriteController.getFavoriteById);
-router.get('/user/:userId', FavoriteController.getAllFavoritesByUserId);
+router.get('/', authMiddleware, FavoriteController.getAllFavorites);
+router.get('/:id', authMiddleware, FavoriteController.getFavoriteById);
+router.get('/user/:userId', authMiddleware, FavoriteController.getAllFavoritesByUserId);
 
 router.post('/', authMiddleware, FavoriteController.createFavorite);
 
 router.delete('/:id', authMiddleware, ownershipMiddleware('favorite'), FavoriteController.deleteFavoriteById);
+//TODO ajustar para verificar se o favorito pertence ao user autenticado
 router.delete('/', authMiddleware, FavoriteController.deleteFavoriteByUserAndBook);
 
 export default router;
