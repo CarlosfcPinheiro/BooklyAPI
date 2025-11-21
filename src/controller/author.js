@@ -64,7 +64,7 @@ const AuthorController = {
         try{
             const Author = req.context.models.author;
             const { id } = req.params;
-            const {name, nationality, birthDate} = req.body;
+            const {name, bio, nationality, birthDate} = req.body;
 
             const author = await Author.findByPk(id);
             if(!author){
@@ -74,6 +74,7 @@ const AuthorController = {
             author.name = name || author.name;
             author.nationality = nationality || author.nationality;
             author.birthDate = birthDate || author.birthDate;
+            author.bio = bio || author.bio;
 
             await author.save();
 
