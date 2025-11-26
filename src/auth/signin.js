@@ -25,7 +25,10 @@ const signIn = async (req, res) => {
         
         await models.token.create({ id: tokenId });
         
-        res.json({ token });
+        res.status(200).json({ 
+            token: token, 
+            user: user 
+        });
     } catch (error) {
         res.status(500).json({ message: "Internal server error" });
     }
