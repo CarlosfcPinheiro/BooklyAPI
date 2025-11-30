@@ -53,7 +53,7 @@ const BookController = {
             const {authorId, genderId} = req.query;
 
             if (!authorId || !genderId){
-                return res.satus(400).json({message: "authorId e genderId são obrigatórios."});
+                return res.status(400).json({message: "authorId e genderId são obrigatórios."});
             }
 
             const book = await Book.create({
