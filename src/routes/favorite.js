@@ -8,6 +8,7 @@ const router = express.Router();
 router.get('/', authMiddleware, FavoriteController.getAllFavorites);
 router.get('/:id', authMiddleware, FavoriteController.getFavoriteById);
 router.get('/user/:userId', authMiddleware, FavoriteController.getAllFavoritesByUserId);
+router.get('/user/:userId/book/:bookId', authMiddleware, FavoriteController.getFavoriteByBookIdAndUserId);
 
 router.post('/', authMiddleware, FavoriteController.createFavorite);
 
