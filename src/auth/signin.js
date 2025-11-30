@@ -25,7 +25,7 @@ const signIn = async (req, res) => {
         
         await models.token.create({ id: tokenId });
         
-        res.status(200).json({ 
+        res.status(200).json({
             token: token, 
             user: user 
         });
