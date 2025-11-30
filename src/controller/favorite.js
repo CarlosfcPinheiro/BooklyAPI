@@ -144,6 +144,39 @@ const FavoriteController = {
         } catch(error){
             res.status(500).json({ message: 'Erro interno no servidor ao deletar o favorito', error: error.message });
         }
+    },
+
+    getFavoriteByBookIdAndUserId: async (req, res) => {
+        try {
+            const Favorite = req.context.models.favorite;
+            const User = req.context.models.user;
+            const Book = req.context.models.book;
+            const authenticatedUserId = req.user.userId; // do token JWT
+            const { bookId } = req.query;
+            if (!bookId){
+                return res.status(400).json({ message: 'bookId é obrigatório para buscar um favorito' });
+            }
+
+            const user = await User.findByPk(authenticatedUserId);
+            if (!user) return res.status(404).json({ message: 'Usuário não encontrado' });
+            const book = await Book.findByPk(bookId);
+            if (!book) return res.status(404).json({ message: 'Livro não encontrado' });
+
+            const favorite = await Favorite.findByUserAndBook(authenticatedUserId, bookId);
+            if (!favorite) {
+                return res.status(404).json({ message: 'Favorito não encontrado para o usuário e livro fornecidos' });
+            }
+
+            res.status(200).json({ 
+                message: 'Favorito encontrado com sucesso', 
+                data: favorite 
+            });
+        } catch(error){
+            res.status(500).json({ 
+                message: 'Erro interno no servidor ao buscar o favorito', 
+                error: error.message 
+            });
+        }
     }
 };
 
