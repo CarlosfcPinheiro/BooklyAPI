@@ -6,9 +6,9 @@ import ownershipMiddleware from '../middleware/ownershipMiddleware.js';
 const router = express.Router();
 
 router.get('/', authMiddleware, FavoriteController.getAllFavorites);
-router.get('/:id', authMiddleware, FavoriteController.getFavoriteById);
+router.get('/user/verify', authMiddleware, FavoriteController.getFavoriteByBookIdAndUserId);
 router.get('/user/:userId', authMiddleware, FavoriteController.getAllFavoritesByUserId);
-router.get('/user/book/:bookId', authMiddleware, FavoriteController.getFavoriteByBookIdAndUserId);
+router.get('/:id', authMiddleware, FavoriteController.getFavoriteById);
 
 router.post('/', authMiddleware, FavoriteController.createFavorite);
 
