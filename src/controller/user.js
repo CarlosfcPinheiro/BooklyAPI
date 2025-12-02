@@ -4,7 +4,9 @@ const UserController = {
     getAllUsers: async (req, res) => {
         try {
             const User = req.context.models.user;
-            const users = await User.findAll();
+            const users = await User.findAll({
+                attributes: { exclude: ["password"] }
+            });
             if(!users || users.lenght == 0){
                 return res.status(204).json({message: "Nenhum usurário encontrado"});
             }
@@ -25,7 +27,9 @@ const UserController = {
         try {
             const User = req.context.models.user;
             const { id } = req.params;
-            const user = await User.findByPk(id);
+            const user = await User.findByPk(id, {
+                attributes: { exclude: ["password"] }
+            });
             if(!user){
                 return res.status(404).json({message: "Usuário não encontrado"});
             }
