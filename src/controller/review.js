@@ -128,7 +128,7 @@ const ReviewController = {
             const { bookId } = req.params;
             const reviews = await Review.findAllByBookId(bookId);
             if (!reviews || reviews.length === 0){
-                return res.status(404).json({ message: "Nenhuma review encontrada para este livro" });
+                return res.status(204).json({ message: "Nenhuma review encontrada para este livro" });
             }
 
             res.status(200).json({

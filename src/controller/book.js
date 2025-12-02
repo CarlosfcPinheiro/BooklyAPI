@@ -29,7 +29,10 @@ const BookController = {
         try{
             const Book = req.context.models.book;
             const {id} = req.params;
-            const book = await Book.findByPk(id);
+            const book = await Book.findAll({
+                where: {id: id},
+                include: ["Author", "Gender"]
+            });
             if(!book){
                 return res.status(404).json({message: "Livro não foi encontrado."});
             }
