@@ -4,7 +4,9 @@ const FavoriteController = {
     getAllFavorites: async(req, res) => {
         try {
             const Favorite = req.context.models.favorite;
-            const favorites = await Favorite.findAll();
+            const favorites = await Favorite.findAll({
+                include: ["Book", "User"]
+            });
             if (!favorites || favorites.length === 0) {
                 return res.status(204).json({ message: 'Nenhum favorito encontrado' });
             }
