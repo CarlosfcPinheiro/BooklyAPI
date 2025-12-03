@@ -30,8 +30,11 @@ const signUp =  async (req, res) => {
         await Token.create({ id: tokenId });
         
         res.status(201).json({
-            token: token,
-            data: newUser
+            message: "Usuário registrado com sucesso",
+            data: {
+                token: token,
+                user: newUser
+            }
          });
     } catch (error) {
         res.status(500).json({ message: "Erro ao registrar novo usuário" });
