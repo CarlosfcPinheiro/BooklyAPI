@@ -3,7 +3,9 @@ const ReviewController = {
     getAllReviews: async (req, res) => {
         try {
             const Review = req.context.models.review;
-            const reviews = await Review.findAll();
+            const reviews = await Review.findAll({
+                include: ["User", "Book"]
+            });
             if (!reviews || reviews.length === 0){
                 return res.status(204).json({ message: "Nenhuma review encontrada" });
             }
@@ -12,7 +14,10 @@ const ReviewController = {
                 data: reviews
             });
         } catch(error) {
-            res.status(500).json({ message: "Erro ao buscar reviews", error: error.message });
+            res.status(500).json({ 
+                message: "Erro ao buscar reviews", 
+                error: error.message 
+            });
         }
     },
 
@@ -146,7 +151,9 @@ const ReviewController = {
             const { bookId } = req.params;
             const avgRating = await Review.getAvgRateByBookId(bookId);
             if (avgRating === null){
-                return res.status(404).json({ message: "Nenhuma review encontrada para este livro" });
+                return res.status(404).json({ 
+                    message: "Nenhuma review encontrada para este livro" 
+                });
             }
 
             res.status(200).json({
