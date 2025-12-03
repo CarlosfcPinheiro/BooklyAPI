@@ -30,8 +30,7 @@ const BookController = {
             const Book = req.context.models.book;
             const Review = req.context.models.review;
             const {id} = req.params;
-            const book = await Book.findAll({
-                where: {id: id},
+            const book = await Book.findByPk(id, {
                 include: ["Author", "Gender"]
             });
             if(!book) return res.status(404).json({message: "Livro não foi encontrado."});
@@ -39,7 +38,10 @@ const BookController = {
             
             res.status(200).json({
                 message:"Livro encontrado com sucesso.", 
-                data: { ...book, avgRating: avg }
+                data: { 
+                    ...book.toJSON(), 
+                    avgRating: avg 
+                }
             });
         } catch(error){
             res.status(500).json({
