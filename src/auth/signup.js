@@ -8,7 +8,7 @@ const User = models.user;
 const Token = models.token;
 
 const signUp =  async (req, res) => {
-    const { email, password, name, description } = req.body;
+    const { email, password, name, description, profilePhotoUrl } = req.body;
     try {
         const existingUser = await User.findOne({ where: { email } });
         if (existingUser) {
@@ -21,7 +21,8 @@ const signUp =  async (req, res) => {
             email: email,
             password: hashedPassword,
             name: name,
-            description: description
+            description: description,
+            profilePhotoUrl: profilePhotoUrl
         });
 
         let tokenId = uuidv4();
