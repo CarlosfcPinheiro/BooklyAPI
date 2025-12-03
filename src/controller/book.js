@@ -34,13 +34,14 @@ const BookController = {
                 include: ["Author", "Gender"]
             });
             if(!book) return res.status(404).json({message: "Livro não foi encontrado."});
-            const avg = await Review.getAvgRateByBookId(id);
+            let avg = await Review.getAvgRateByBookId(id);
+            avg = (avg === "NaN") ? 0 : avg;
             
             res.status(200).json({
                 message:"Livro encontrado com sucesso.", 
                 data: { 
                     ...book.toJSON(), 
-                    avgRating: avg 
+                    avgRating: avg
                 }
             });
         } catch(error){
