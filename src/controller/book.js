@@ -28,19 +28,19 @@ const BookController = {
     getBookById: async (req, res) => {
         try{
             const Book = req.context.models.book;
+            const Review = req.context.models.review;
             const {id} = req.params;
             const book = await Book.findAll({
                 where: {id: id},
                 include: ["Author", "Gender"]
             });
-            if(!book){
-                return res.status(404).json({message: "Livro não foi encontrado."});
-            }
-
+            if(!book) return res.status(404).json({message: "Livro não foi encontrado."});
+            const avg = await Review.getAvgRateByBookId(id);
+            
             res.status(200).json({
                 message:"Livro encontrado com sucesso.", 
-                data: book}
-            );
+                data: { ...book, avgRating: avg }
+            });
         } catch(error){
             res.status(500).json({
                 message: "Erro ao buscar o livro", 
