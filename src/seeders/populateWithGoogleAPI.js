@@ -1,5 +1,5 @@
-import models from "../../models/index.js";                                                                             
-import authors from "../defaultAuthors.js";
+import models from "../models/index.js";                                                                             
+import authors from "../utils/defaultAuthors.js";
 
 // Cria registros de autores, livros e generos utilizando a Google Books API
 const populateWithGoogleAPI = async () => {

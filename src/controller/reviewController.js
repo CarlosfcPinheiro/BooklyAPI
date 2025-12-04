@@ -1,11 +1,9 @@
+import ReviewService from "../services/reviewService.js";
 
 const ReviewController = {
     getAllReviews: async (req, res) => {
         try {
-            const Review = req.context.models.review;
-            const reviews = await Review.findAll({
-                include: ["User", "Book"]
-            });
+            const reviews = await ReviewService.getAllReviews(req.context.models);
             if (!reviews || reviews.length === 0){
                 return res.status(204).json({ message: "Nenhuma review encontrada" });
             }
@@ -23,11 +21,10 @@ const ReviewController = {
 
     getReviewById: async (req, res) =>  {
         try{
-            const Review = req.context.models.review;
             const { id } = req.params;
-            const review = await Review.findByPk(id);
+            const review = await ReviewService.getReviewById(req.context.models, id);
             if (!review){
-                return res.status(204).json({ message: "Review não encontrada" });
+                return res.status(404).json({ message: "Review não encontrada" });
             }
             res.status(200).json({
                 message: 'Review encontrada com sucesso',
@@ -40,24 +37,24 @@ const ReviewController = {
 
     createReview: async (req, res) =>  {
         try {
-            const Review = req.context.models.review;
             const authenticatedUserId = req.user.userId; // do token JWT
             const { bookId } = req.query;
             const { rate, comment } = req.body;
-            if (!bookId) {
-                return res.status(400).json({ message: "bookId é obrigatório" });
-            }
 
-            const review = await Review.create({
-                UserId: authenticatedUserId,
-                BookId: bookId,
+            const result = await ReviewService.createReview(req.context.models, {
+                userId: authenticatedUserId,
+                bookId: bookId,
                 rate: rate,
                 comment: comment
             });
 
+            if (!result.success) {
+                return res.status(result.status).json({ message: result.message });
+            }
+
             res.status(201).json({
                 message: 'Review criada com sucesso',
-                data: review
+                data: result.data
             });
         } catch(error) {
             res.status(500).json({ message: "Erro ao criar review", error: error.message });
@@ -66,19 +63,11 @@ const ReviewController = {
 
     updateReviewById: async (req, res) =>  {
         try {
-            const Review = req.context.models.review;
             const { id } = req.params;
-            const { rate, comment } = req.body;
-
-            const review = await Review.findByPk(id);
+            const review = await ReviewService.updateReviewById(req.context.models, id, req.body);
             if (!review){
                 return res.status(404).json({ message: "Review não encontrada" });
             }
-
-            review.rate = rate || review.rate;
-            review.comment = comment || review.comment;
-
-            await review.save();
 
             res.status(200).json({
                 message: 'Review atualizada com sucesso',
@@ -91,15 +80,11 @@ const ReviewController = {
 
     deleteReviewById: async (req, res) =>  {
         try {
-            const Review = req.context.models.review;
             const { id } = req.params;
-
-            const review = await Review.findByPk(id);
+            const review = await ReviewService.deleteReviewById(req.context.models, id);
             if (!review){
                 return res.status(404).json({ message: "Review não encontrada" });
             }
-
-            await review.destroy();
 
             res.status(200).json({
                 message: 'Review deletada com sucesso'
@@ -111,9 +96,8 @@ const ReviewController = {
 
     getReviewsByUserId: async (req, res) =>  {
         try {
-            const Review = req.context.models.review;
             const { userId } = req.params;
-            const reviews = await Review.findAllByUserId(userId);
+            const reviews = await ReviewService.getReviewsByUserId(req.context.models, userId);
             if (!reviews || reviews.length === 0){
                 return res.status(404).json({ message: "Nenhuma review encontrada para este usuário" });
             }
@@ -129,9 +113,8 @@ const ReviewController = {
 
     getReviewsByBookId: async (req, res) =>  {
         try {
-            const Review = req.context.models.review;
             const { bookId } = req.params;
-            const reviews = await Review.findAllByBookId(bookId);
+            const reviews = await ReviewService.getReviewsByBookId(req.context.models, bookId);
             if (!reviews || reviews.length === 0){
                 return res.status(204).json({ message: "Nenhuma review encontrada para este livro" });
             }
@@ -147,9 +130,8 @@ const ReviewController = {
 
     getAvgReviewsByBookId: async (req, res) =>  {
         try {
-            const Review = req.context.models.review;
             const { bookId } = req.params;
-            const avgRating = await Review.getAvgRateByBookId(bookId);
+            const avgRating = await ReviewService.getAvgReviewsByBookId(req.context.models, bookId);
             if (avgRating === null){
                 return res.status(404).json({ 
                     message: "Nenhuma review encontrada para este livro" 

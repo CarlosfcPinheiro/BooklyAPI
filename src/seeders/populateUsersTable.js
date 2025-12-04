@@ -1,6 +1,6 @@
-import users from "../defaultUsers.js";
+import users from "../utils/defaultUsers.js";
 
-import models from "../../models/index.js";
+import models from "../models/index.js";
 import bcrypt from "bcryptjs";
 
 const populateUsersTable = async() => {
