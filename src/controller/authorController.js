@@ -1,7 +1,7 @@
 //TODO adicionar query param de busca por nome do autor aplicando regex para busca parcial, ex /author?name=jo retorna todos os autores com "jo" no nome
 
 const AuthorController = {
-    getAllAuthor: async (req, res) => {
+    getAllAuthors: async (req, res) => {
         try {
             const Author = req.context.models.author;
             const authors = await Author.findAll();
@@ -30,10 +30,7 @@ const AuthorController = {
                 data: author
             });
         } catch(error) {
-            res.status(500).json({
-                message: "Erro ao encontrar o autor", 
-                error: error.message
-            });
+            res.status(500).json({ message: "Erro ao encontrar o autor", error: error.message });
         }
     },
 

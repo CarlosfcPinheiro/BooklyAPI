@@ -1,5 +1,5 @@
 import express from 'express';
-import GenderController from '../controller/gender.js';
+import GenderController from '../controller/genderController.js';
 import authMiddleware from '../middleware/authMiddleware.js';
 
 const router = express.Router();

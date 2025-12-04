@@ -1,5 +1,5 @@
 import express from "express"
-import ReviewController from "../controller/review.js";
+import ReviewController from "../controller/reviewController.js";
 import authMiddleware from "../middleware/authMiddleware.js";
 import ownershipMiddleware from "../middleware/ownershipMiddleware.js";
 
