@@ -1,16 +1,18 @@
-//TODO adicionar query param de busca por nome do autor aplicando regex para busca parcial, ex /author?name=jo retorna todos os autores com "jo" no nome
+import AuthorService from "../services/authorService.js";
 
+//TODO adicionar query param de busca por nome do autor aplicando regex para busca parcial, ex /author?name=jo retorna todos os autores com "jo" no nome
 const AuthorController = {
-    getAllAuthor: async (req, res) => {
+    getAllAuthors: async (req, res) => {
         try {
-            const Author = req.context.models.author;
-            const authors = await Author.findAll();
+            const authors = await AuthorService.getAllAuthors(req.context.models);
             if (!authors || authors.length == 0){
                 return res.status(204).json({message: "Nenhum autor(a) foi encontrado"});
             }
 
-            res.status(200).json({message: "Autores(as) encontrados com sucesso", data: authors})
-
+            res.status(200).json({
+                message: "Autores(as) encontrados com sucesso", 
+                data: authors
+            })
         } catch(error) {
             res.status(500).json({message: "Erro ao buscar autores", error: error.message});
         }
@@ -18,9 +20,8 @@ const AuthorController = {
 
     getAuthorById: async (req, res) => {
         try{
-            const Author = req.context.models.author;
             const { id } = req.params;
-            const author = await Author.findByPk(id);
+            const author = await AuthorService.getAuthorById(req.context.models, id);
             if(!author) {
                 return res.status(404).json({message: "Autor não foi encontrado"});
             }
@@ -30,23 +31,14 @@ const AuthorController = {
                 data: author
             });
         } catch(error) {
-            res.status(500).json({
-                message: "Erro ao encontrar o autor", 
-                error: error.message
-            });
+            res.status(500).json({ message: "Erro ao encontrar o autor", error: error.message });
         }
     },
 
     createAuthor: async (req, res) => {
         try{
-            const Author = req.context.models.author;
-            const {name, nationality, birthDate, bio} = req.body
-            const author = await Author.create({
-                name: name,
-                nationality: nationality,
-                birthDate: birthDate,
-                bio: bio
-            });
+            const authorData = req.body;
+            const author = await AuthorService.createAuthor(req.context.models, authorData);
 
             res.status(201).json({
                 message: "Autor(a) criado com sucesso", 
@@ -62,21 +54,12 @@ const AuthorController = {
 
     updateAuthorById: async (req, res) => {
         try{
-            const Author = req.context.models.author;
             const { id } = req.params;
-            const {name, bio, nationality, birthDate} = req.body;
-
-            const author = await Author.findByPk(id);
+            const authorData = req.body;
+            const author = await AuthorService.updateAuthorById(req.context.models, id, authorData);
             if(!author){
                 return res.status(404).json({message: "Autor(a) não encontrado"});
             }
-
-            author.name = name || author.name;
-            author.nationality = nationality || author.nationality;
-            author.birthDate = birthDate || author.birthDate;
-            author.bio = bio || author.bio;
-
-            await author.save();
 
             res.status(200).json({
                 message: "Autor(a) atualizado com sucesso", 
@@ -92,19 +75,19 @@ const AuthorController = {
 
     deleteAuthorById: async (req, res) => {
         try {
-            const Author = req.context.models.author;
             const {id} = req.params;
-            const author = await Author.findByPk(id);
+            const author = await AuthorService.deleteAuthorById(req.context.models, id);
             if(!author){
                 return res.status(404).json({message: "Autor(a) não encontrado"});
             }
 
-            await author.destroy();
-
             res.status(200).json({message: "Autor(a) deletado com sucesso"});
 
         }catch(error){
-            res.status(500).json({message: "Erro ao deletar o autor(a)", error: error.message});
+            res.status(500).json({
+                message: "Erro ao deletar o autor(a)", 
+                error: error.message
+            });
         }
     }
 };

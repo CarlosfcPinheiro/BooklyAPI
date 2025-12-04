@@ -8,8 +8,8 @@ import models from "./models/index.js";
 import router from "./routes/index.js";
 import authRouter from "./auth/index.js";
 
-import populateUsersTable from "./utils/db/populateUsersTable.js";
-import populateWithGoogleAPI from "./utils/db/populateWithGoogleAPI.js";
+import populateUsersTable from "./seeders/populateUsersTable.js";
+import populateWithGoogleAPI from "./seeders/populateWithGoogleAPI.js";
 
 const app = express();
 const port = process.env.PORT ?? 3000;

@@ -1,16 +1,16 @@
+import GenderService from "../services/genderService.js";
 
 const GenderController = {
     getAllGenders: async (req, res) => {
         try{
-            const Gender = req.context.models.gender;
-            const gender = await Gender.findAll();
-            if(!gender || gender.lengh == 0){
+            const genders = await GenderService.getAllGenders(req.context.models);
+            if(!genders || genders.length == 0){
                 return res.status(204).json({message: "Nenhum gênero encontrado"});
             }
 
             res.status(200).json({
                 message: "Gênero encontrado com sucesso", 
-                data: gender
+                data: genders
             });
         } catch (error) {
             res.status(500).json({
@@ -22,9 +22,8 @@ const GenderController = {
 
     getGenderById: async (req, res) => {
         try { 
-            const Gender = req.context.models.gender;
             const {id} = req.params;
-            const gender = await Gender.findByPk(id);
+            const gender = await GenderService.getGenderById(req.context.models, id);
             if(!gender){
                 return res.status(404).json({message: "Gênero não encontrado"})
             }
@@ -43,23 +42,15 @@ const GenderController = {
 
     createGender: async (req, res) => {
         try {
-            const Gender = req.context.models.gender;
-            const {name, description} = req.body;
-            const gender = await Gender.findOne({
-                where: {name}
-            });
-            if (gender){
-                return res.status(409).json({message: "Gênero já existe"});
+            const result = await GenderService.createGender(req.context.models, req.body);
+            
+            if (!result.success) {
+                return res.status(result.status).json({ message: result.message });
             }
-
-            const newGender = await Gender.create({
-                name: name,
-                description: description
-            });
 
             res.status(201).json({
                 message: "Gênero criado com sucesso",
-                data: newGender
+                data: result.data
             });
         } catch (error) {
             res.status(500).json({
@@ -71,16 +62,11 @@ const GenderController = {
 
     updateGenderById: async (req, res) => {
         try {
-            const Gender = req.context.models.gender;
             const {id} = req.params;
-            const {name} = req.body;
-            const gender = await Gender.findByPk(id);
+            const gender = await GenderService.updateGenderById(req.context.models, id, req.body);
             if(!gender){
                 return res.status(404).json({message: "Gênero não encontrado"})
             }
-
-            gender.name = name || gender.name;
-            await gender.save();
 
             res.status(200).json({
                 message: "Gênero atualizado com sucesso",
@@ -96,14 +82,11 @@ const GenderController = {
 
     deleteGenderById: async (req, res) => {
         try {
-            const Gender = req.context.models.gender;
             const {id} = req.params;
-            const gender = await Gender.findByPk(id);
+            const gender = await GenderService.deleteGenderById(req.context.models, id);
             if(!gender){
                 return res.status(404).json({message: "Gênero não encontrado"})
             }
-
-            await gender.destroy();
 
             res.status(200).json({
                 message: "Gênero deletado com sucesso"

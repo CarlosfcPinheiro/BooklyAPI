@@ -1,15 +1,10 @@
-import { Op } from "sequelize";
+import BookService from "../services/bookService.js";
 
 const BookController = {
     getAllBooks: async (req, res) => {
         try{
-            const Book = req.context.models.book;
             const {title} = req.query;
-            const books = await Book.findAll({
-                where: {
-                    title: {[Op.iLike]: `%${title || ''}%`
-                }
-            }});
+            const books = await BookService.getAllBooks(req.context.models, title);
             if(!books || books.length == 0){
                 return res.status(204).json({message: "Nenhum livro encontrado"});
             }
@@ -26,25 +21,18 @@ const BookController = {
     },
 
     getBookById: async (req, res) => {
-        try{
-            const Book = req.context.models.book;
-            const Review = req.context.models.review;
-            const {id} = req.params;
-            const book = await Book.findByPk(id, {
-                include: ["Author", "Gender"]
-            });
-            if(!book) return res.status(404).json({message: "Livro não foi encontrado."});
-            let avg = await Review.getAvgRateByBookId(id);
-            avg = (avg === "NaN") ? 0 : avg;
-            
+        try {
+            const { id } = req.params;
+            const book = await BookService.getBookById(req.context.models, id);   
+            if (!book) {
+                return res.status(404).json({ message: "Livro não foi encontrado." });
+            }
+
             res.status(200).json({
-                message:"Livro encontrado com sucesso.", 
-                data: { 
-                    ...book.toJSON(), 
-                    avgRating: avg
-                }
+                message: "Livro encontrado com sucesso.", 
+                data: book
             });
-        } catch(error){
+        } catch(error) {
             res.status(500).json({
                 message: "Erro ao buscar o livro", 
                 error: error.message
@@ -53,31 +41,21 @@ const BookController = {
     },
 
     createBook: async (req, res) => {
-        try{
-            const Book = req.context.models.book;
-            const {title, description, year, imgUrl} = req.body;
-            const {authorId, genderId} = req.query;
+        try {
+            const { authorId, genderId } = req.query;
+            const result = await BookService.createBook(req.context.models, req.body, authorId, genderId);
 
-            if (!authorId || !genderId){
-                return res.status(400).json({message: "authorId e genderId são obrigatórios."});
+            if (!result.success) {
+                return res.status(result.status).json({ message: result.message });
             }
 
-            const book = await Book.create({
-                title: title,
-                description: description,
-                year: year,
-                AuthorId: authorId,
-                GenderId: genderId,
-                imgUrl: imgUrl
-            });
-
             res.status(201).json({
-                message: "Livro criado com sucesso.", 
-                data: book
+                message: 'Livro criado com sucesso',
+                data: result.data
             });
-        } catch(error){
+        } catch(error) {
             res.status(500).json({
-                message: "Erro ao criar o Livro", 
+                message: "Erro ao criar o livro", 
                 error: error.message
             });
         }
@@ -85,20 +63,13 @@ const BookController = {
 
     updateBookById: async (req, res) => {
         try{
-            const Book = req.context.models.book;
             const {id} = req.params;
-            const {title, description, year} = req.body;
+            const bookData = req.body;
 
-            const book = await Book.findByPk(id);
+            const book = await BookService.updateBookById(req.context.models, id, bookData);
             if(!book){
                 return res.status(404).json({message: "Livro não encontrado."});
             }
-
-            book.title = title || book.title;
-            book.description = description || book.description;
-            book.year = year || book.year;
-            
-            await book.save();
 
             res.status(200).json({
                 message: "Livro atualizado com sucesso", 
@@ -114,14 +85,11 @@ const BookController = {
 
     deleteBookById: async (req, res) => {
         try {
-            const Book = req.context.models.book;
             const {id} = req.params;
-            const book = await Book.findByPk(id);
+            const book = await BookService.deleteBookById(req.context.models, id);
             if(!book){
                 return res.status(404).json({message: "Livro não encontrado"});
             }
-
-            await book.destroy();
 
             res.status(200).json({message: "Livro deletado com sucesso"});
 
@@ -135,9 +103,8 @@ const BookController = {
 
     getAllBooksByAuthorId: async (req, res) => {
         try{
-            const Book = req.context.models.book;
             const {authorId} = req.params;
-            const books = await Book.findAllByAuthorId(authorId);
+            const books = await BookService.getAllBooksByAuthorId(req.context.models, authorId);
             if(!books || books.length === 0){
                 return res.status(404).json({message: "Nenhum livro encontrado para o autor informado."});
             }
@@ -156,9 +123,8 @@ const BookController = {
 
     getAllBooksByGenderId: async (req, res) => {
         try{
-            const Book = req.context.models.book;
             const {genderId} = req.params;
-            const books = await Book.findAllByGenderId(genderId);
+            const books = await BookService.getAllBooksByGenderId(req.context.models, genderId);
             if(!books || books.length === 0){
                 return res.status(404).json({message: "Nenhum livro encontrado para o gênero informado."});
             }
