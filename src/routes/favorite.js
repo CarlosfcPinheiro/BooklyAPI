@@ -1,5 +1,5 @@
 import express from 'express';
-import FavoriteController from '../controller/favorite.js';
+import FavoriteController from '../controller/favoriteController.js';
 import authMiddleware from '../middleware/authMiddleware.js';
 import ownershipMiddleware from '../middleware/ownershipMiddleware.js';
 
